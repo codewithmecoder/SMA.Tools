@@ -1,0 +1,1 @@
+// IPlatformService interface
