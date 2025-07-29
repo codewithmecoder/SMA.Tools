@@ -8,3 +8,14 @@
 @using Microsoft.JSInterop
 @using SMA.Tools
 @using SMA.Tools.Components
+@using SMA.Tools.Core.Interfaces
+@using SMA.Tools.Core.Models
+@using SMA.Tools.Core.Services
+@using SMA.Tools.Commons
+
+@inject IAccountService AccountService
+@inject ITaskScheduler Scheduler
+@inject ILogService LogService
+@inject IAiService AiService
+@inject IPlatformService PlatformService
+@inject LiteDbContext Db

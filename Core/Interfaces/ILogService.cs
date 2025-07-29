@@ -1,1 +1,0 @@
-// ILogService interface

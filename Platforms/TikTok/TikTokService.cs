@@ -1,1 +1,0 @@
-// TikTok platform service

@@ -1,0 +1,62 @@
+@attribute [Route(RouteNames.Scheduler)]
+
+<h3>Scheduled Tasks</h3>
+
+<table class="table">
+    <thead>
+    <tr><th>Platform</th><th>Account</th><th>Content</th><th>Time</th><th>Status</th></tr>
+    </thead>
+    <tbody>
+    @foreach (var task in _tasks)
+    {
+        <tr>
+            <td>@task.Platform</td>
+            <td>@task.AccountId</td>
+            <td>@task.Content</td>
+            <td>@task.ScheduleAt.ToLocalTime()</td>
+            <td>@(task.Executed ? "Done" : "Pending")</td>
+        </tr>
+    }
+    </tbody>
+</table>
+
+<h4>Add New Task</h4>
+<select @bind="_platform" class="form-select">
+    <option>TikTok</option>
+    <option>Facebook</option>
+    <option>Instagram</option>
+    <option>YouTube</option>
+    <option>X</option>
+</select><br />
+<input @bind="_accountId" class="form-control" placeholder="Account ID" /><br />
+<textarea @bind="_content" class="form-control" placeholder="Content" rows="4"></textarea><br />
+<input @bind="_schedule" type="datetime-local" class="form-control" /><br />
+<button class="btn btn-primary" @onclick="AddTask">Add Task</button>
+
+@code {
+    private string _platform = "TikTok";
+    private string _accountId = "";
+    private string _content = "";
+    private DateTime _schedule = DateTime.Now;
+    private List<TaskModel> _tasks = [];
+
+    protected override void OnInitialized()
+    {
+        _tasks = Db.Tasks.FindAll().OrderBy(t => t.ScheduleAt).ToList();
+    }
+
+    private void AddTask()
+    {
+        Db.Tasks.Insert(new TaskModel
+        {
+            Platform = _platform,
+            AccountId = _accountId,
+            Content = _content,
+            ScheduleAt = _schedule.ToUniversalTime()
+        });
+        _tasks = Db.Tasks.FindAll().OrderBy(t => t.ScheduleAt).ToList();
+        _platform = "TikTok";
+        _accountId = _content = "";
+        _schedule = DateTime.Now;
+    }
+}

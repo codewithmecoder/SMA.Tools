@@ -1,0 +1,30 @@
+
+@attribute [Route(RouteNames.Accounts)]
+
+<h3>Account Manager</h3>
+<input @bind="_newAccount" placeholder="Account ID" />
+<button @onclick="AddAccount">Add</button>
+
+<ul>
+    @foreach (var account in _accounts)
+    {
+        <li>@account</li>
+    }
+</ul>
+
+@code {
+    private string _newAccount = "";
+    private List<string> _accounts = [];
+
+    protected override async Task OnInitializedAsync()
+    {
+        _accounts = await AccountService.GetAccountsAsync("TikTok");
+    }
+
+    private async Task AddAccount()
+    {
+        await AccountService.AddAccountAsync("TikTok", _newAccount);
+        _accounts = await AccountService.GetAccountsAsync("TikTok");
+        _newAccount = "";
+    }
+}

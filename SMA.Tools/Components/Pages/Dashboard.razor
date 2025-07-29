@@ -1,0 +1,35 @@
+@attribute [Route(RouteNames.Dashboard)]
+
+<h3>Logs Dashboard</h3>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Time</th>
+            <th>Account</th>
+            <th>Platform</th>
+            <th>Action</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var log in _logs)
+        {
+            <tr>
+                <td>@log.Timestamp</td>
+                <td>@log.AccountId</td>
+                <td>@log.Platform</td>
+                <td>@log.Action</td>
+                <td>@log.Status</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+    private List<LogEntry> _logs = [];
+
+    protected override async Task OnInitializedAsync()
+    {
+        _logs = await LogService.GetLogsAsync();
+    }
+}

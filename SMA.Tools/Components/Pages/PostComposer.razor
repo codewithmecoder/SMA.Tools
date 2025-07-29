@@ -1,0 +1,35 @@
+@attribute [Route(RouteNames.Compose)]
+
+<h3>Compose Post with AI</h3>
+<input @bind="_topic" class="form-control" placeholder="Enter Topic" />
+<br />
+<button @onclick="GenerateContent">Generate AI Caption + Hashtags</button>
+<br />
+<br />
+<textarea @bind="_postContent" class="form-control" rows="5"></textarea>
+<br />
+<button @onclick="PostContent">Post to TikTok</button>
+<p>@_status</p>
+
+@code {
+    private string _topic = "";
+    private string _postContent = "";
+    private string _status = "";
+    private const string AccountId = "TikTok01";
+
+    private async Task GenerateContent()
+    {
+        _status = "Generating...";
+        var caption = await AiService.GenerateCaptionAsync($"Create a caption for: {_topic}");
+        var hashtags = await AiService.GenerateHashtagsAsync(_topic);
+        _postContent = caption + "\\n" + string.Join(" ", hashtags);
+        _status = "Generated.";
+    }
+
+    private async Task PostContent()
+    {
+        _status = "Posting...";
+        await PlatformService.PostAsync(AccountId, _postContent);
+        _status = "Posted successfully.";
+    }
+}
